@@ -10,18 +10,19 @@ package com.zhanghan.zhzuul.filter;
  * @version 1.0
  */
 
-import com.google.common.io.CharStreams;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 
@@ -103,23 +104,20 @@ public class MyZuulFilter extends ZuulFilter {
 
     private Object getParment(HttpServletRequest request, String parmentKey) {
 
-        String requestData = null;
-
-        JSONParser jsonParser = new JSONParser();
-
-        JSONObject requestJson;
-
         try {
-            if (request.getContentLength() > 0) {
-                requestData = CharStreams.toString(request.getReader());
-            }
 
-            if (null == requestData) {
+            InputStream inputStream = request.getInputStream();
+
+            String body = StreamUtils.copyToString(inputStream, Charset.forName("UTF-8"));
+
+            if (StringUtils.isEmpty(body)) {
                 return null;
             }
 
-            requestJson = (JSONObject) jsonParser.parse(requestData);
-            return requestJson.get(parmentKey);
+            JSONObject json = JSONObject.fromObject(body);
+
+            return json.get(parmentKey);
+
         } catch (Exception e) {
             return null;
         }

@@ -106,9 +106,11 @@ public class MyZuulFilter extends ZuulFilter {
 
         try {
 
+            String charset = request.getCharacterEncoding();
+
             InputStream inputStream = request.getInputStream();
 
-            String body = StreamUtils.copyToString(inputStream, Charset.forName("UTF-8"));
+            String body = StreamUtils.copyToString(inputStream, Charset.forName(charset));
 
             if (StringUtils.isEmpty(body)) {
                 return null;

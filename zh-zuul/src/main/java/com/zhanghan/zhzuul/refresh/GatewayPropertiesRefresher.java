@@ -18,7 +18,7 @@ public class GatewayPropertiesRefresher implements ApplicationContextAware {
     @Autowired
     private RefreshScope refreshScope;
 
-    @ApolloConfigChangeListener("stwo")
+    @ApolloConfigChangeListener("zuul")
     public void onChange(ConfigChangeEvent changeEvent) {
 
         refreshProperties(changeEvent);

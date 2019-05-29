@@ -16,15 +16,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class RestImpl {
 
 
     @RequestMapping(path = "/ttt", method = RequestMethod.POST)
-    public String rest(@RequestBody LombokRequest lombokRequest) {
+    public Object rest(@RequestBody LombokRequest lombokRequest) {
 
-
-        return "this is a2" + lombokRequest.getMobile();
+        Map<String,String> result = new HashMap<>();
+        result.put("service","this is a2");
+        result.put("mobile",lombokRequest.getMobile());
+        return result;
     }
 
 
